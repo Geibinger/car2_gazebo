@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="test_car">
+  
+  <!-- Import materials and plugins -->
+  <xacro:include filename="$(find car2_gazebo)/models/materials.xacro"/>
+  <xacro:include filename="$(find car2_gazebo)/models/inertia_tensors.xacro"/>
+
+  <link name="base_link"/>
+      
+  <xacro:property name="plate_x"    value="0.26" />
+  <xacro:property name="plate_y"    value="0.08" />
+  <xacro:property name="plate_z"    value="0.02" />
+
+  <!-- Chassis -->
+  <joint name="chassis_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="chassis_link"/>
+  </joint>
+  <link name="chassis_link">
+      <visual>
+          <origin xyz="${plate_x/2} 0 -${plate_z}" rpy="0 0 0"/>
+          <geometry>
+              <mesh scale="1 1 1" filename="file://$(find car2_gazebo)/models/platforms/car/body/meshes/car.dae"/>
+          </geometry>
+          <material name="ChassisRed">
+              <color rgba="0.851 0.0 0.0 1.0"/>
+          </material>
+      </visual>
+      <collision>
+          <origin xyz="0 0 -${plate_z}" rpy="0 0 0"/>
+          <geometry>
+              <box size="${plate_x} ${plate_y} ${plate_z}"/>
+          </geometry>
+      </collision>
+      <xacro:box_inertial_with_origin x="${plate_x}" y="${plate_y}"  z="${plate_z}" mass="1.074">
+          <origin xyz="0 0 -${plate_z}" />
+      </xacro:box_inertial_with_origin>
+  </link>
+
+</robot>

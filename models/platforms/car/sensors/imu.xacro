@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="imu" params="name namespace parent *origin">
+        <!-- IMU Link -->
+        <link name="${namespace}/${name}_link">
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <box size="0.02 0.02 0.01"/>
+                </geometry>
+                <material name="blue"/>
+            </visual>
+        </link>
+
+        <!-- Gazebo Material and Sensor Plugin -->
+        <gazebo reference="${namespace}/${name}_link">
+            <material>Gazebo/Blue</material>
+            <sensor name="${name}_sensor" type="imu">
+                <always_on>true</always_on>
+                <update_rate>100</update_rate>
+                <visualize>true</visualize>
+                <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                    <topicName>${namespace}/imu</topicName>
+                    <bodyName>${namespace}/${name}_link</bodyName>
+                    <updateRateHZ>100.0</updateRateHZ>
+                    <gaussianNoise>0.0</gaussianNoise>
+                    <xyzOffset>0 0 0</xyzOffset>
+                    <rpyOffset>0 0 0</rpyOffset>
+                    <frameName>${namespace}/${name}_link</frameName>
+                    <initialOrientationAsReference>false</initialOrientationAsReference>
+                </plugin>
+                <pose>0 0 0 0 0 0</pose>
+            </sensor>
+        </gazebo>
+
+        <!-- IMU Joint -->
+        <joint name="${namespace}/${name}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${namespace}/${name}_link"/>
+            <xacro:insert_block name="origin"/>
+        </joint>
+    </xacro:macro>
+</robot>

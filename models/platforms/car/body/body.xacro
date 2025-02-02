@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <!-- Include inertia tensors -->
+  <xacro:include filename="$(find car2_gazebo)/models/inertia_tensors.xacro"/>
+  
+  <!-- Include chassis and wheel macros -->
+  <xacro:include filename="$(find car2_gazebo)/models/platforms/car/body/chassis.xacro"/>
+  <xacro:include filename="$(find car2_gazebo)/models/platforms/car/body/wheel.xacro"/>
+  <xacro:include filename="$(find car2_gazebo)/models/platforms/car/sensors/camera.xacro"/>
+  
+  <xacro:property name="wheel_radius" value="0.03225" />
+  
+  <xacro:macro name="car_body" params="name namespace parent">    
+    <!-- Chassis -->
+    <xacro:car_chassis name="${name}" namespace="${namespace}" parent="${parent}" xyz="0.13 0 0.068" rpy="0 0 ${pi}"/>
+      
+    <!-- Wheels -->
+    <xacro:wheel namespace="${namespace}" side="rear_left"   parent="${parent}"   xyz="0    -0.055 ${wheel_radius}" rpy="${pi/2} 0 0" radius="${wheel_radius}"  steering="fixed"/>
+    <xacro:wheel namespace="${namespace}" side="rear_right"  parent="${parent}"   xyz="0    +0.055 ${wheel_radius}" rpy="${-pi/2} 0 0" radius="${wheel_radius}"  steering="fixed"/>
+    <xacro:wheel namespace="${namespace}" side="front_left"  parent="${parent}"   xyz="0.26 -0.055 ${wheel_radius}" rpy="${pi/2} 0 0" radius="${wheel_radius}"  steering="revolute"/>
+    <xacro:wheel namespace="${namespace}" side="front_right" parent="${parent}"   xyz="0.26 +0.055 ${wheel_radius}" rpy="${-pi/2} 0 0" radius="${wheel_radius}"  steering="revolute"/>
+    
+    <!-- Camera
+    <xacro:camera name="front_camera" namespace="${namespace}" parent="${parent}" xyz="0.03 0 0.1" rpy="0 0 0"/> -->
+
+    <!-- Plugins -->
+    <xacro:wheels_steering namespace="${namespace}" radius="${wheel_radius}"/>
+    <xacro:car_state_publisher namespace="${namespace}"/>
+
+  </xacro:macro>
+</robot>

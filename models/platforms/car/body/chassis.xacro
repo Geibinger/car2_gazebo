@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <xacro:macro name="car_chassis" params="name namespace parent xyz rpy">   
+      
+    <xacro:property name="plate_x"    value="0.26" />
+    <xacro:property name="plate_y"    value="0.08" />
+    <xacro:property name="plate_z"    value="0.02" />
+
+    <!-- Chassis -->
+    <joint name="${parent}_${name}_joint" type="fixed">
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+        <parent link="${namespace}/${parent}"/>
+        <child link="${namespace}/${name}"/>
+    </joint>
+    <link name="${namespace}/${name}">
+        <visual>
+            <origin xyz="${plate_x/2} 0 -${plate_z}" rpy="0 0 0"/>
+            <geometry>
+                <mesh scale="1 1 1" filename="file://$(find car2_gazebo)/models/platforms/car/body/meshes/car.dae/car.dae"/>
+            </geometry>
+            <material name="light_grey"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -${plate_z}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${plate_x} ${plate_y} ${plate_z}"/>
+            </geometry>
+        </collision>
+        <xacro:box_inertial_with_origin x="${plate_x}" y="${plate_y}"  z="${plate_z}" mass="1.074">
+            <origin xyz="0 0 -${plate_z}" />
+        </xacro:box_inertial_with_origin>
+    </link>  
+  </xacro:macro>
+
+</robot>

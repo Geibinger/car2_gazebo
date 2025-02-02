@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="car">
+  
+  <!-- Import materials and plugins -->
+  <xacro:include filename="$(find car2_gazebo)/models/materials.xacro"/>
+  <xacro:include filename="$(find car2_gazebo)/models/platforms/car/plugins.xacro"/>
+    
+  <!-- Import platform body -->
+  <xacro:include filename="$(find car2_gazebo)/models/platforms/car/body/body.xacro"/>
+
+  <!-- Base Footprint -->
+  <link name="r0/base_footprint"/>
+
+  <!-- Base Link -->
+  <link name="r0/base_link"/>
+
+  <!-- Joint between base_footprint and base_link -->
+  <joint name="r0/base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="r0/base_footprint"/>
+    <child link="r0/base_link"/>
+  </joint>
+  
+  <!-- Define the car body -->
+  <xacro:car_body name="chassis" namespace="r0" parent="base_link"/>
+
+</robot>

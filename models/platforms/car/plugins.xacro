@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="namespace" default="r0"/>
+
+  <xacro:macro name="car_state_publisher" params="namespace">
+    <gazebo>
+      <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <robotNamespace>${namespace}</robotNamespace>
+        <joint_name>wheel_axis_rear_left_joint</joint_name>
+        <joint_name>wheel_axis_rear_right_joint</joint_name>
+        <joint_name>wheel_axis_front_left_joint</joint_name>
+        <joint_name>wheel_axis_front_right_joint</joint_name>
+        <joint_name>wheel_mount_front_left_joint</joint_name>
+        <joint_name>wheel_mount_front_right_joint</joint_name>
+        <updateRate>25.0</updateRate>
+        <alwaysOn>true</alwaysOn>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="wheels_steering" params="namespace radius">
+    <gazebo>
+      <plugin name="wheels_steering_controller" filename="libgazebo_ros_wheels_steerable.so">
+        <rosDebugLevel>Debug</rosDebugLevel>
+        <topicTwist>/cmd_vel</topicTwist>
+        <topicOdom>/odom</topicOdom>
+        <frameOdom>odom</frameOdom>
+        <publishOdomTF>true</publishOdomTF>
+        <topicGroundTruth>/ground_truth</topicGroundTruth>
+        <frameGroundTruth>ground_truth</frameGroundTruth>
+        <frameBase>base_footprint</frameBase>
+        <namespace>${namespace}</namespace>
+
+        <jointRearLeft>wheel_axis_rear_left_joint</jointRearLeft>
+        <jointRearRight>wheel_axis_rear_right_joint</jointRearRight>
+        <jointSteeringLeft>wheel_mount_front_left_joint</jointSteeringLeft>
+        <jointSteeringRight>wheel_mount_front_right_joint</jointSteeringRight>
+        <torqueMaxWheel>5</torqueMaxWheel>
+
+        <!-- Distance between front and rear axis -->
+        <wheelbaseDistance>0.26</wheelbaseDistance>
+        <!-- Distance between left and right wheel -->
+        <kingpinDistance>0.15</kingpinDistance>
+        <maxSteeringAngle>0.5235987756</maxSteeringAngle>
+
+        <!-- PID controller parameters -->
+        <updateRateController>100</updateRateController>
+        <maxEffortSteeringPid>5.12</maxEffortSteeringPid>
+        <pidP>60.0</pidP>
+        <pidI>40.0</pidI>
+        <pidD>5.0</pidD>
+
+        <wheelRadius>${radius}</wheelRadius>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+</robot>
